@@ -9,3 +9,5 @@ Once setting this up, run the app using the command line or bash (type cmd in th
 At this point, the app SHOULD be working. You can move more pictures to the directory and press the 'Update JSON' link to add them into the list. To tag an image, enter the tag into the box into the middle of the screen and press enter. If you did this right, a checkbox with blue text should appear on the right side of the screen. Congrats! You've tagged your first image! You can remove a tag by either typing it manually (typing bean once adds it, typing it again removes it, typing it again adds it back), or clicking on the checkbox and click the 'submit tag changes' button.
 
 In the top left of this page, there are two buttons and a text field. This is to switch between pictures, with the text field being the current index of the image, you can use this to quickly navigate to say, the 115th image in the folder.
+
+Yea, I made this webapp to tag hentai.
