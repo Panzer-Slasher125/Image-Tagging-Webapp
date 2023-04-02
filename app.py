@@ -201,7 +201,7 @@ def pictures():
     knownTags.sort(key=sortFunc) # This is way better to navigate when sorted
 
     # Change tags with the checkboxes
-    if request.method == "POST" and request.form.get('tag_submit') == "Submit Tag Changes":
+    if request.method == "POST" and request.form.get('tag_submit') == "Submit Checkbox Changes":
         for i in knownTags:
             if None != request.form.get(i):
                 newimagePath = tagImage(i, imagePath)

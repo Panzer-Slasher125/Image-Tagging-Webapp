@@ -19,31 +19,36 @@
 <a href="/">Go Back</a>
 I like turtles
 <a href="/updatejson">Update JSON</a>
-
-<form method="post">
-    <input type="Submit" value="Previous" name="action1">
-    <input type="Submit" value="Next" name="action2">
-</form>
-<form method="post">
-    <input type="number" value="{{ tiddy_index }}" name="Index">
-</form>
+<br>
 Known tags: {{ known_tags }}
 <table style="width:100%;table-layout:fixed">
     <colgroup>
-        <col style="width:30%">
-        <col style="width:10%">
         <col style="width:60%">
+        <col style="width:10%">
+        <col style="width:30%">
     </colgroup>
     <tbody>
-        <tr style="height:100%">
-            <td><div style="overflow:auto"><img src="{{ tiddy_pic }}" alt="Tits!" height="900px"></div></td>
-            <td><form method="post"><input type="text" name="updateTag" value="Enter New Tag:"></form></td>
+        <tr>
+            <td style="vertical-align: top"><div style="overflow:auto"><img src="{{ tiddy_pic }}" alt="Tits!" height="900px"></div></td>
+            <td>
+                <form method="post"><input type="text" name="updateTag" value="Enter New Tag:"></form>
+                <br>
+                Image index stuff:
+                <br>
+                <form method="post">
+                    <input type="Submit" value="Previous" name="action1">
+                    <input type="Submit" value="Next" name="action2">
+                </form>
+                <form method="post">
+                    <input type="number" value="{{ tiddy_index }}" name="Index">
+                </form>
+            </td>
             <td style="overflow:auto"><h1>Current Tags:</h1>
                 <div style="font-size: 20px;">Click checkbox to swap tag</div>
                 <br><br>
                 <form method="post">
                     {% for j in categories %}
-                        <div id="{{ j }}" style="height:25px;width:100%;overflow-x: auto">
+                        <div id="{{ j }}" style="height:40px;width:100%;overflow-x: auto">
                             {{ j }}
                             <script>
                                 {% for i, value in checked_Tags.items() %}
@@ -64,7 +69,7 @@ Known tags: {{ known_tags }}
                                         secondaryDiv = document.createElement("div")
                                         parentDiv.innerHTML += '{{ metadata|attr(i) }}'
                                         currentLabel = document.createElement("label")
-                                        currentLabel.for = "{{ i }}"
+                                        currentLabel.htmlFor = "{{ i }}"
                                         currentLabel.id = "{{ value }}"
                                         currentLabel.textContent = "{{ i }}"
                                         currentLabel.style = "overflow:auto"
@@ -81,7 +86,7 @@ Known tags: {{ known_tags }}
                         </div>
                         <br>
                     {% endfor %}
-                    <br><br><input type="Submit" value="Submit Tag Changes" name="tag_submit">
+                    <br><br><input type="Submit" value="Submit Checkbox Changes" name="tag_submit">
                 </form>
             </td>
         </tr>
