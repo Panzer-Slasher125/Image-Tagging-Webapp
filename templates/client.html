@@ -42,9 +42,46 @@ Known tags: {{ known_tags }}
                 <div style="font-size: 20px;">Click checkbox to swap tag</div>
                 <br><br>
                 <form method="post">
-                {% for i, value in checked_Tags.items() %}
-                    {{ metadata|attr(i) }} <label for = "{{ i }}" id = "{{ value }}">{{ i }}</label>
-                {% endfor %}
+                    <table>
+                        <tbody>
+                            {% for j in categories %}
+                                <tr>
+                                    <td>{{ j }}</td>
+                                    <td>
+                                        <div id="{{ j }}">
+                                            <script>
+                                                for (let [i, value] of Object.entries({{ checked_Tags|tojson }})) {
+                                                    parentDiv = document.getElementById({{ j }})
+                                                    alphabet = ["a","b","c","d","e",'f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+                                                    k = 0
+                                                    inAlphabet = true
+                                                    console.log(i)
+                                                    while ((i.charAt(k).toLowerCase() in alphabet) == false) {
+                                                        k = k + 1
+                                                        if (k >= alphabet.length) {
+                                                            inAlphabet = false
+                                                            k = 0
+                                                            break
+                                                        }
+                                                    }
+                                                    if (inAlphabet == true) {
+                                                        parentDiv.innerHTML = {{ metadata|attr(i) }}
+                                                        console.log(parentDiv.innerHTML)
+                                                        currentLabel = document.createElement("label")
+                                                        currentLabel.for = {{ i }}
+                                                        currentLabel.id = {{ value }}
+                                                        currentLabel.innerHTML = {{ i }}
+
+                                                        parentDiv.appendChild(currentLabel)
+                                                    }
+                                                }
+                                            </script>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                     <br><br><input type="Submit" value="Submit Tag Changes" name="tag_submit">
                 </form>
             </td>
