@@ -6,12 +6,14 @@ from PIL import Image
 from PIL.ExifTags import TAGS
 import os
 
-abspicturePath = "C:\\Users\\bob22\\OneDrive\\Pictures\\MEME MAKING"  # Make a symbolic link from this
-picturePath = "static/hentai" # This folder either has to either be in /static OR it can be a (soft) symbolic link
+abspicturePath = "C:\\Users\\bob22\\OneDrive\\Pictures\\MEME MAKING"  # Make a symbolic link of this in static
+picturePath = "static/hentai" # This folder either has to either be in /static OR it can be a (soft) symbolic link in static
+port = 9001 # Port the server is hosted on. This will move to config eventually.
 configFilePath = os.path.join("", "config.cfg")  # Need to do a check to verify if this exists, and if it doesn't make one
 tagsPath = os.path.join("", "tags.json")  # The path to the tags file, this is probably just a file with a list inside
-supportedFileTypes = ('.jpg', '.png', '.jpeg', '.jfif')
+supportedFileTypes = ('.jpg', '.png', '.jpeg', '.jfif') # You can probably add more picture file types
 
+# Basic checks to make sure stuff exists (basically first time setup stuff)
 if not os.path.exists(picturePath):
     if not os.path.exists("static"):
         os.mkdir("static")
@@ -35,7 +37,7 @@ for i in listofFiles:
     if not i.lower().endswith(supportedFileTypes):
         listofPics.remove(i)
 
-# Some initialization stuff
+# Some initialization stuff for the server
 app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
@@ -92,7 +94,7 @@ def updateTags(tags):
 
 
 # Updates an image with a new tag (or removes it if it already exists)
-def tagImage(tag, imagePath):
+def tagImage(tag:str, imagePath:str):
     currentTags = extractTags(imagePath)
     extension = os.path.splitext(imagePath)[1]
 
@@ -103,11 +105,11 @@ def tagImage(tag, imagePath):
 
     img = Image.open(imagePath)
     exifDict = img.getexif()
-    tagsstr = ""
 
     tagsstr = ';'.join((map(str,currentTags)))
     tagsstr = tagsstr.removeprefix(";")
 
+    # I think 40094 is the windows xp keywords index.
     exifDict[40094] = tagsstr.encode('utf-16')
 
     img = img.convert("RGB")
@@ -118,9 +120,10 @@ def tagImage(tag, imagePath):
     return imagePath.replace(extension, ".jpg")
 
 
+# What's a class I honestly have no clue
 class tagForm(Form):
      pass
-# Returns a string made of checkbox html tags
+# Returns a html form made of checkboxes
 def createCheckboxes(knownTags:list, currentTags:list):
     form = tagForm
     for i in knownTags:
@@ -129,7 +132,7 @@ def createCheckboxes(knownTags:list, currentTags:list):
             boolean = 'checked'
         field = BooleanField(i, id=i)
         field.name = i
-        field.default = boolean
+        field.default = boolean # This actually doesn't work I think because of html5
         setattr(field, 'value', False)
         setattr(form, i, field)
 
@@ -154,13 +157,13 @@ def pictures():
         session['tiddyIndex'] = 0
         updateList()
 
-    # Handle Form input
+    # Handle Form input, theres definitely better ways to do it.
     if request.method == "POST":
-        if request.form.get('action1') == "Previous":
+        if request.form.get('action1') == "Previous": # Go to the prev image
             session['tiddyIndex'] = session['tiddyIndex'] - 1
-        elif request.form.get('action2') == "Next":
+        elif request.form.get('action2') == "Next": # Next image
             session['tiddyIndex'] = session['tiddyIndex'] + 1
-        elif None != request.form.get('Index'): # The form doesnt return anything if you dont enter anything, hence none
+        elif None != request.form.get('Index'): # Go to specific image index
             session['tiddyIndex'] = int(request.form.get("Index"))
         else:
             pass
@@ -172,7 +175,7 @@ def pictures():
     # Get the Image path as a string as its really annoying otherwise
     imagePath = filePathForwardSlash + "/" + session['listofPics'][session['tiddyIndex']]
 
-    # This goes here because it needs the image path
+    # This goes here because it needs the image path (updates tags from textbox)
     if request.method == "POST" and None != request.form.get('updateTag'):
         newimagePath = tagImage(request.form.get('updateTag'), imagePath)
     else:
@@ -195,8 +198,9 @@ def pictures():
                 break
         return e[i].lower()
 
-    knownTags.sort(key=sortFunc)
+    knownTags.sort(key=sortFunc) # This is way better to navigate when sorted
 
+    # Change tags with the checkboxes
     if request.method == "POST" and request.form.get('tag_submit') == "Submit Tag Changes":
         for i in knownTags:
             if None != request.form.get(i):
@@ -210,6 +214,7 @@ def pictures():
 
     checkedTags = {}
 
+    # This is for rendering red/blue text on the tags. I would use the checkboxes but I couldn't figure it out
     for i in knownTags:
         checkedTags[i] = False
         if i in tags:
@@ -240,6 +245,6 @@ def updateJson():
             updateList()
     return "I am having so much sex uoh <a href='/pics-test'>Go Back</a>"
 
-
+# Run the app.
 if __name__ == '__main__':
-    app.run('localhost', 9001)
+    app.run('localhost', port)
