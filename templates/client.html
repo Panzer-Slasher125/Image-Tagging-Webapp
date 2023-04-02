@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        #False {
+        background: #fb7979;
+        font-size: 20px;
+        }
+
+        #True {
+        background: #66ccff;
+        font-size: 20px;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>Tiddy Pic</title>
+</head>
+<body>
+<a href="/">Go Back</a>
+I like turtles
+<a href="/updatejson">Update JSON</a>
+
+<form method="post">
+    <input type="Submit" value="Previous" name="action1">
+    <input type="Submit" value="Next" name="action2">
+</form>
+<form method="post">
+    <input type="number" value="{{ tiddy_index }}" name="Index">
+</form>
+Known tags: {{ known_tags }}
+<table style="width:100%;table-layout:fixed">
+    <colgroup>
+        <col style="width:50%">
+        <col style="width:10%">
+        <col style="width:40%">
+    </colgroup>
+    <tbody>
+        <tr>
+            <td><div style="overflow:auto"><img src="{{ tiddy_pic }}" alt="Tits!" height="900px"></div></td>
+            <td><form method="post"><input type="text" name="updateTag" value="Enter New Tag:"></form></td>
+            <td><h1>Current Tags:</h1>
+                <div style="font-size: 20px;">Click checkbox to swap tag</div>
+                <br><br>
+                <form method="post">
+                {% for i, value in checked_Tags.items() %}
+                    {{ metadata|attr(i) }} <label for = "{{ i }}" id = "{{ value }}">{{ i }}</label>
+                {% endfor %}
+                    <br><br><input type="Submit" value="Submit Tag Changes" name="tag_submit">
+                </form>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</body>
+</html>
