@@ -220,8 +220,27 @@ def pictures():
         if i in tags:
             checkedTags[i] = True
 
+    categories = []
+
+    # This keeps track of the current alphabetical categories, also I'm very creative
+    for outofvarnames in knownTags:
+        alphabet = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z')
+        i = 0
+        notInAlphabet = False
+        while outofvarnames[i].lower() not in alphabet:
+            i = i + 1
+            if i >= len(alphabet):
+                i = 0
+                notInAlphabet = True
+                break
+        if outofvarnames[i].upper() not in categories:
+            if not notInAlphabet:
+                categories.append(outofvarnames[i].upper())
+            else:
+                categories.append(outofvarnames[i])
+
     # Render the webpage
-    return render_template("client.html", tiddy_pic=newimagePath, tiddy_index=session['tiddyIndex'], metadata=checkboxes, known_tags=knownTags, checked_Tags=checkedTags)
+    return render_template("client.html", tiddy_pic=newimagePath, tiddy_index=session['tiddyIndex'], metadata=checkboxes, known_tags=knownTags, checked_Tags=checkedTags, categories=categories)
 
 
 # Updates tags file with new tags and converts all pictures into jpeg (since PNG doesn't like tags)

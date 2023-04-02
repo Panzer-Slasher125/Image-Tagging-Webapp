@@ -30,21 +30,57 @@ I like turtles
 Known tags: {{ known_tags }}
 <table style="width:100%;table-layout:fixed">
     <colgroup>
-        <col style="width:50%">
+        <col style="width:30%">
         <col style="width:10%">
-        <col style="width:40%">
+        <col style="width:60%">
     </colgroup>
     <tbody>
-        <tr>
+        <tr style="height:100%">
             <td><div style="overflow:auto"><img src="{{ tiddy_pic }}" alt="Tits!" height="900px"></div></td>
             <td><form method="post"><input type="text" name="updateTag" value="Enter New Tag:"></form></td>
-            <td><h1>Current Tags:</h1>
+            <td style="overflow:auto"><h1>Current Tags:</h1>
                 <div style="font-size: 20px;">Click checkbox to swap tag</div>
                 <br><br>
                 <form method="post">
-                {% for i, value in checked_Tags.items() %}
-                    {{ metadata|attr(i) }} <label for = "{{ i }}" id = "{{ value }}">{{ i }}</label>
-                {% endfor %}
+                    {% for j in categories %}
+                        <div id="{{ j }}" style="height:25px;width:100%;overflow-x: auto">
+                            {{ j }}
+                            <script>
+                                {% for i, value in checked_Tags.items() %}
+                                    // This is incredibly cursed. I would do it different if I could.
+                                    parentDiv = document.getElementById("{{ j }}")
+                                    alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+                                    k = 0
+                                    inAlphabet = true
+                                    while (alphabet.includes("{{ i }}".charAt(k).toLowerCase()) === false) {
+                                        k = k + 1
+                                        if (k >= alphabet.length) {
+                                            inAlphabet = false
+                                            k = 0
+                                            break
+                                        }
+                                    }
+                                    if (inAlphabet == true && "{{ i }}".charAt(k).toUpperCase() == "{{ j }}" ) {
+                                        secondaryDiv = document.createElement("div")
+                                        parentDiv.innerHTML += '{{ metadata|attr(i) }}'
+                                        currentLabel = document.createElement("label")
+                                        currentLabel.for = "{{ i }}"
+                                        currentLabel.id = "{{ value }}"
+                                        currentLabel.textContent = "{{ i }}"
+                                        currentLabel.style = "overflow:auto"
+
+                                        spanForSpacing = document.createElement("span")
+                                        spanForSpacing.style = "display:inline-block;width:20px"
+
+                                        currentLabel.appendChild(spanForSpacing)
+                                        //secondaryDiv.appendChild(currentLabel)
+                                        parentDiv.appendChild(currentLabel)
+                                    }
+                                {% endfor %}
+                            </script>
+                        </div>
+                        <br>
+                    {% endfor %}
                     <br><br><input type="Submit" value="Submit Tag Changes" name="tag_submit">
                 </form>
             </td>
